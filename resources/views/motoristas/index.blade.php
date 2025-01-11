@@ -41,6 +41,12 @@
             background-color: #0056b3;
         }
         .btn-danger {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: black;
+            border-radius: 5px;
             background-color: #dc3545;
         }
         .btn-danger:hover {
@@ -125,7 +131,7 @@
                             <form action="{{ route('motoristas.destroy', $motorista->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit">Excluir</button>
+                                <button type="submit" class="btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta viagem?')">Excluir</button>
                             </form>
                         </td>
                     </tr>

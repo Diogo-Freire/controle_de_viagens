@@ -41,6 +41,12 @@
             background-color: #0056b3;
         }
         .btn-danger {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: black;
+            border-radius: 5px;
             background-color: #dc3545;
         }
         .btn-danger:hover {
