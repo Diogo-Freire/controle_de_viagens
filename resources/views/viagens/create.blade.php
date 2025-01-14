@@ -117,13 +117,15 @@
                 @endforeach
             </select>
 
-            <label for="motorista_id">Motorista</label>
-            <select name="motorista_id" id="motorista_id" required>
-                <option value="" disabled selected>Selecione um motorista</option>
-                @foreach ($motoristas as $motorista)
-                    <option value="{{ $motorista->id }}">{{ $motorista->nome }}</option>
-                @endforeach
-            </select>
+            <div class="form-group">
+                <label for="motoristas">Motoristas</label>
+                <select name="motoristas[]" id="motoristas" class="form-control" multiple>
+                    @foreach ($motoristas as $motorista)
+                        <option value="{{ $motorista->id }}">{{ $motorista->nome }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <p>Fique apertado <strong>CTRL</strong> para selecionar mais de um motorista</p>
 
             <label for="km_inicial">KM Inicial</label>
             <input type="number" name="km_inicial" id="km_inicial" required>

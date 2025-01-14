@@ -25,6 +25,7 @@ class ViagemController extends Controller
     {
         $veiculos = Veiculo::all();
         $motoristas = Motorista::all();
+
         return view('viagens.create', compact('veiculos', 'motoristas'));
     }
 
@@ -35,24 +36,34 @@ class ViagemController extends Controller
     {
         $request->validate([
             'veiculo_id' => 'required|exists:veiculos,id',
-            'motorista_id' => 'required|exists:motoristas,id',
-            'km_inicial' => 'required|integer',
-            'km_final' => 'required|integer'
+            'motoristas' => 'required|array',
+            'motoristas.*' => 'exists:motoristas,id',
+            'km_inicial' => 'required|numeric|min:0',
+            'km_final' => 'required|numeric|gte:km_inicial',
         ]);
+    
+        // Cria a viagem
+        $viagem = Viagem::create([
+            'veiculo_id' => $request->input('veiculo_id'),
+            'km_inicial' => $request->input('km_inicial'),
+            'km_final' => $request->input('km_final'),
+        ]);
+    
+        // Relaciona os motoristas à viagem na tabela pivot
+        $viagem->motoristas()->attach($request->input('motoristas'));
+    
+        return redirect()->route('viagens.index')->with('success', 'Viagem criada com sucesso!');
 
-        Viagem::create($request->all());
-        return redirect()->route('viagens.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        $viagem = Viagem::findOrFail($id);
+        $viagem = Viagem::with('motoristas', 'veiculo')->findOrFail($id);
         return view('viagens.show', compact('viagem'));
     }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -67,12 +78,28 @@ class ViagemController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Viagem $viagem)
     {
-        $viagem = Viagem::findOrFail($id);
-        $viagem->update($request->all());
-        return redirect()->route('viagens.index');
+        $request->validate([
+            'veiculo_id' => 'required|exists:veiculos,id',
+            'km_inicial' => 'required|numeric|min:0',
+            'km_final' => 'required|numeric|gte:km_inicial',
+            'motoristas' => 'required|array|min:1',
+            'motoristas.*' => 'exists:motoristas,id',
+        ]);
+
+        $viagem->update([
+            'veiculo_id' => $request->veiculo_id,
+            'km_inicial' => $request->km_inicial,
+            'km_final' => $request->km_final,
+        ]);
+
+        // Atualizar motoristas associados
+        $viagem->motoristas()->sync($request->motoristas);
+
+        return redirect()->route('viagens.index')->with('success', 'Viagem atualizada com sucesso!');
     }
+
 
     /**
      * Remove the specified resource from storage.

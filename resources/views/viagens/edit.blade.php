@@ -120,16 +120,18 @@
                 @endforeach
             </select>
 
-            <label for="motorista_id">Motorista</label>
-            <select name="motorista_id" id="motorista_id" required>
-                <option value="" disabled>Selecione um motorista</option>
-                @foreach ($motoristas as $motorista)
-                    <option value="{{ $motorista->id }}" 
-                        @if($motorista->id == $viagem->motorista_id) selected @endif>
-                        {{ $motorista->nome }}
-                    </option>
-                @endforeach
-            </select>
+            <div class="form-group">
+                <label for="motoristas">Motoristas</label>
+                <select name="motoristas[]" id="motoristas" class="form-control" multiple>
+                    @foreach ($motoristas as $motorista)
+                        <option value="{{ $motorista->id }}" 
+                            {{ in_array($motorista->id, $viagem->motoristas->pluck('id')->toArray()) ? 'selected' : '' }}>
+                            {{ $motorista->nome }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
 
             <label for="km_inicial">KM Inicial</label>
             <input type="number" name="km_inicial" id="km_inicial" value="{{ $viagem->km_inicial }}" required>

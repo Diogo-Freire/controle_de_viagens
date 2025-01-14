@@ -96,7 +96,14 @@
 
         <div class="details">
             <p><span>Veículo:</span> {{ $viagem->veiculo->modelo }} ({{ $viagem->veiculo->ano }})</p>
-            <p><span>Motorista:</span> {{ $viagem->motorista->nome }}</p>
+            <p><strong>Motoristas:</strong></p>
+            <ul>
+                @forelse ($viagem->motoristas as $motorista)
+                    <li>{{ $motorista->nome }}</li>
+                @empty
+                    <li>Nenhum motorista associado</li>
+                @endforelse
+            </ul>
             <p><span>KM Inicial:</span> {{ $viagem->km_inicial }}</p>
             <p><span>KM Final:</span> {{ $viagem->km_final }}</p>
             <p><span>Data de Criação:</span> {{ $viagem->created_at->format('d/m/Y H:i') }}</p>

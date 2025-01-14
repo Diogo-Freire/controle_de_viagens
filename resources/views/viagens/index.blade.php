@@ -121,7 +121,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Veículo</th>
-                        <th>Motorista</th>
+                        <th>Motoristas</th>
                         <th>KM Inicial</th>
                         <th>KM Final</th>
                         <th>Ações</th>
@@ -131,8 +131,22 @@
                     @foreach($viagens as $viagem)
                         <tr>
                             <td>{{ $viagem->id }}</td>
-                            <td>{{ $viagem->veiculo->modelo }} ({{ $viagem->veiculo->year }})</td>
-                            <td>{{ $viagem->motorista->nome }}</td>
+                            <td>
+                                @if ($viagem->veiculo)
+                                    {{ $viagem->veiculo->modelo }} ({{ $viagem->veiculo->ano }})
+                                @else
+                                    Não especificado
+                                @endif
+                            </td>
+                            <td>
+                                @if ($viagem->motoristas->isEmpty())
+                                    Não especificado
+                                @else
+                                    @foreach ($viagem->motoristas as $motorista)
+                                        {{ $motorista->nome }}<br>
+                                    @endforeach
+                                @endif
+                            </td>
                             <td>{{ $viagem->km_inicial }} km</td>
                             <td>{{ $viagem->km_final }} km</td>
                             <td>
